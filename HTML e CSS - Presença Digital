@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presença Digital</title>
+  <style>
+    /* Estilos gerais */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #021D49;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: auto; /* Permite rolagem na página */
+    }
+
+    /* Estilo do container do formulário */
+    .form-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    h2 {
+      text-align: center;
+      color: white;
+      background-color: #021D49;
+      font-size: 24px;
+      padding: 10px 0;
+      border-radius: 5px 5px 0 0;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 16px; /* Tamanho da fonte padrão para os parágrafos */
+      line-height: 1.5; /* Espaçamento entre as linhas */
+      margin-bottom: 10px; /* Espaço abaixo dos parágrafos */
+      color: #333; /* Cor do texto */
+    }
+
+    /* Estilos para os campos de input, select e button */
+    input, select, button {
+      padding: 15px;
+      margin: 12px 0;
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 8px; /* Bordas mais arredondadas */
+      background-color: #f9f9f9;
+      color: #333;
+      box-sizing: border-box;
+    }
+
+    /* Estilo ao focar em um campo */
+    input:focus, select:focus {
+      border-color: #000000;
+      outline: none;
+    }
+
+    /* Estilo do botão */
+    button {
+      background-color: #E1261C;  /* Cor de fundo vermelha */
+      color: white;  /* Cor do texto branca */
+      padding: 12px 20px;  /* Espaçamento interno, mais amplo */
+      border: none;  /* Remove borda */
+      border-radius: 8px;  /* Bordas arredondadas */
+      font-weight: bold;  /* Texto em negrito */
+      font-size: 16px;  /* Tamanho de fonte legível */
+      cursor: pointer;  /* Muda o cursor para mãozinha */
+      transition: background-color 0.3s, transform 0.2s;  /* Suaviza as transições de cor e efeito de clique */
+      width: 100%;  /* Largura do botão ajustada para preencher o espaço disponível */
+      box-sizing: border-box;  /* Inclui o padding e a borda no cálculo da largura */
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* Estilos gerais para as listas suspensas */
+    select {
+      appearance: none; /* Remove o estilo padrão de listas */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: #fff;
+      background-image: url('https://i.pinimg.com/564x/a7/b7/f8/a7b7f8e726fe8914e3854c8ca9ada9af.jpg'); /* Ícone de seta */
+      background-size: 15px 10px; /* Largura: 15px, Altura: 10px */
+      background-repeat: no-repeat;
+      background-position: right 10px center; /* Coloca a seta à direita */
+      padding-right: 30px; /* Ajusta o espaço para a seta e a barra de rolagem */
+      width: 100%; /* A largura das listas suspensas será 100% */
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      color: #333;
+      box-sizing: border-box;
+      margin-bottom: 8px; /* Reduz o espaço entre as listas suspensas */
+    }
+
+    /* Estilo específico para as listas suspensas de colaboradores */
+    .collaborator-select {
+      background-color: #e0f7fa;
+      border: 2px solid #00796b; /* Bordas mais destacadas para colaboradores */
+      color: #00796b; /* Cor do texto */
+    }
+
+    /* Estilo específico para as listas suspensas de justificativas */
+    .absence-reason-select {
+      background-color: #f1f8e9;
+      border: 2px solid #8bc34a; /* Bordas mais destacadas para justificativas */
+      color: #388e3c; /* Cor do texto */
+    }
+
+    /* Colaboradores e justificativas */
+    .collaborator-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr 1fr; /* Define 4 colunas: Matrícula (1fr), Nome (2fr), Presença (1fr), Justificativa (1fr) */
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #ddd;
+      gap: 5px; /* Espaçamento entre as colunas */
+    }
+
+    /* Nome do colaborador */
+    .collaborator-row span:first-child {
+      margin-right: 8px; /* Espaço leve entre a matrícula e o nome */
+    }
+
+    /* Estilo específico para a matrícula */
+    .collaborator-row .matricula {
+      margin-right: 8px; /* Espaço leve entre a matrícula e o nome */
+    }
+
+    /* Estilo para as listas suspensas de colaboradores e justificativas */
+    .collaborator-row select {
+      width: 90%; /* Garante que os selects ocupem toda a coluna */
+      margin-right: 0.1%; /* Espaço entre as listas suspensas */
+    }
+
+    /* Justificativa (oculta inicialmente) */
+    .absence-reason {
+      display: none;
+    }
+
+    /* Estilos gerais para a seção de colaboradores */
+    .collaborators {
+      display: flex;
+      flex-direction: column;
+      margin-top: 20px;
+      max-height: 350px;
+      overflow-y: auto;
+    }
+
+    /* Estilo para o título da seção de colaboradores */
+    .collaborator-header {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* Estilo de erro no login */
+    #loginError {
+      color: red;
+      display: none;
+      text-align: center;
+    }
+
+    /* Logo da empresa */
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 150px;
+      z-index: 10;
+    }
+
+    .logo img {
+      width: 100%;
+      height: auto;
+    }
+
+    /* Loading */
+    #loading {
+      display: none;
+      color: #E1261C;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    /* Cor de fundo para presença */
+    .select-present {
+      background-color: #81C784; /* Verde claro */
+      color: #fff;
+    }
+
+    /* Cor de fundo para ausência */
+    .select-absent {
+      background-color: #E57373; /* Vermelho claro */
+      color: #fff;
+    }
+
+    progress {
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    progress::-webkit-progress-bar {
+      background-color: #f3f3f3;
+      border-radius: 10px;
+    }
+
+    progress::-webkit-progress-value {
+      background-color: #4caf50;
+      border-radius: 10px;
+    }
+
+    progress::-moz-progress-bar {
+      background-color: #4caf50;
+      border-radius: 10px;
+    }
+
+    #collaboratorsLoading {
+      color: #E1261C;
+      text-align: Left;
+      font-weight: bold;
+      /* Add more styles as needed, e.g., font size, color, etc. */
+    }
+
+    #leadersLoading {
+      color: #E1261C;
+      text-align: Left;
+      font-weight: bold;
+      /* Add more styles as needed, e.g., font size, color, etc. */
+    }
+
+    /* Estilo para a mensagem sobre justificativa de falta dentro do formulário */
+    .absence-message {
+      background-color: #f9f9f9;  /* Fundo cinza claro */
+      padding: 12px;  /* Espaçamento interno */
+      border-radius: 8px;  /* Bordas arredondadas */
+      margin-top: 20px;  /* Espaço superior */
+      text-align: center;  /* Alinha o texto ao centro */
+      color: #333;  /* Cor do texto */
+      border: 1px solid #ddd;  /* Borda cinza clara */
+    }
+
+    .absence-message a {
+      color: #E1261C;  /* Cor do link (vermelho) */
+      font-weight: bold;  /* Texto em negrito */
+      text-decoration: none;  /* Remove o sublinhado */
+    }
+
+    .absence-message a:hover {
+      text-decoration: underline;  /* Sublinha o link ao passar o mouse */
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="loginSection" class="form-container">
+    <h2>Login</h2>
+    <label for="username">Usuário</label>
+    <input type="text" id="username" placeholder="Digite o usuário" />
+    <label for="password">Senha</label>
+    <input type="password" id="password" placeholder="Digite a senha" />
+    <button onclick="login()">Entrar</button>
+    <div id="loginError" style="color: red; display: none;">Usuário ou senha inválidos</div>
+    
+    <!-- Barra de progresso para login -->
+    <progress id="loginProgress" value="0" max="100" style="width: 100%; height: 5px; display: none;"></progress>
+    
+    <div id="loading" style="display: none;">Verificando Login...</div>
+  </div>
+
+  <!-- Formulário de presença -->
+  <div id="presencaSection" class="form-container" style="display: none;">
+    <h2>Presença Digital</h2>
+    
+    <!-- Seletor de turno -->
+    <label for="turno">Selecione o turno:</label>
+    <select id="turno" onchange="loadLeaders()">
+      <option value="">Escolha um turno</option>
+      <option value="1º Turno">1º Turno</option>
+      <option value="2º Turno">2º Turno</option>
+      <option value="3º Turno">3º Turno</option>
+      <option value="Administrativo">Turno Administrativo</option>
+    </select>
+
+    <!-- Seletor de líder -->
+    <label for="leader">Selecione o líder:</label>
+    <select id="leader" onchange="loadCollaborators()" disabled>
+      <option value="">Escolha um líder</option>
+    </select>
+    <div id="leadersLoading" class="loading-message" style="display:none;">Carregando Gestores...</div><br>
+
+    <!-- Seção de colaboradores -->
+    <div class="collaborators" id="collaboratorsSection">
+      <div class="collaborator-header">Colaboradores</div>
+      <div id="collaboratorsList"></div>
+    </div>
+
+    <div id="collaboratorsLoading" style="display: none;">Carregando colaboradores...</div>
+
+    <button onclick="submitForm()">Enviar</button>
+    
+    <!-- Barra de progresso para envio -->
+    <progress id="submitProgress" value="0" max="100" style="width: 100%; height: 5px; display: none;"></progress>
+
+    <!-- Mensagem sobre justificativa de falta dentro do formulário -->
+    <div class="absence-message">
+      <p>Caso precise justificar uma falta de dias anteriores, <a href="https://script.google.com/macros/s/AKfycbwM3jp5HK4TQKkA2dC4voaCWCCFQDxyUBO6lXqZqg/dev" target="_blank">clique aqui</a> para solicitar a modificação.</p>
+    </div>
+  </div>
+
+  <!-- Logo da empresa -->
+  <div class="logo">
+    <img src="https://forumilos.com.br/wp-content/uploads/2024/08/CEVA-LOGISTICS-1024x308.png" alt="Logo CEVA Logistics" />
+  </div>
+
+  <script>
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const loginButton = document.querySelector("button"); // Seleciona o botão
+
+      if (!username || !password) {
+        alert("Preencha todos os campos!");
+        return;
+      }
+
+      loginButton.disabled = true; // Desabilitar o botão após o clique
+
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('loginProgress').style.display = 'block';  // Exibir a barra de progresso
+
+      // Simulando o progresso (atualização da barra)
+      let progress = 0;
+      let interval = setInterval(function() {
+        progress += 10;
+        document.getElementById('loginProgress').value = progress;
+
+        if (progress >= 100) {
+          clearInterval(interval);
+        }
+      }, 300); // Atualiza a barra a cada 300ms
+
+      google.script.run
+        .withSuccessHandler(function(response) {
+          loginButton.disabled = false; // Reabilitar o botão após o processo
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('loginProgress').style.display = 'none'; // Ocultar a barra
+          if (response === 'success') {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('presencaSection').style.display = 'block';
+            loadLeaders();
+          } else {
+            document.getElementById('loginError').style.display = 'block';
+          }
+        })
+        .checkLogin(username, password)
+        .withFailureHandler(function(error) {
+          loginButton.disabled = false; // Reabilitar o botão em caso de erro
+          alert("Erro no login: " + error.message);
+        });
+    }
+
+
+    function loadLeaders() {
+      const turno = document.getElementById('turno').value;
+      const leaderSelect = document.getElementById('leader');
+      const collaboratorsSection = document.getElementById('collaboratorsSection');
+      const collaboratorsList = document.getElementById('collaboratorsList');
+      const loadingMessage = document.getElementById('leadersLoading'); // Mensagem de carregamento
+
+      // Se o turno não estiver selecionado, desabilite o campo de líderes e esconda a seção de colaboradores
+      if (!turno) {
+        leaderSelect.disabled = true;
+        collaboratorsSection.style.display = 'none'; // Ocultar a seção de colaboradores
+        collaboratorsList.innerHTML = ''; // Limpar a lista de colaboradores
+        collaboratorsList.style.display = 'none'; // Esconder a lista de colaboradores
+        loadingMessage.style.display = 'none'; // Esconder a mensagem de carregamento
+        return; // Não carregar os líderes se o turno não for selecionado
+      }
+
+      leaderSelect.disabled = false; // Habilitar o campo de líderes
+      collaboratorsSection.style.display = 'block'; // Exibir a seção de colaboradores
+      collaboratorsList.style.display = 'none'; // Esconder a lista de colaboradores inicialmente
+
+      // Exibir a mensagem de carregamento
+      loadingMessage.style.display = 'block';
+
+      // Chama o Apps Script para obter os líderes com base no turno
+      google.script.run.withSuccessHandler(function(leaders) {
+        leaderSelect.innerHTML = '<option value="">Escolha um líder</option>'; // Limpar as opções anteriores
+
+        leaders.forEach(leader => {
+          const option = document.createElement('option');
+          option.value = leader;
+          option.textContent = leader;
+          leaderSelect.appendChild(option);
+        });
+
+        // Após o carregamento dos líderes, ocultar a mensagem de carregamento
+        loadingMessage.style.display = 'none';
+      }).getLeadersByTurno(turno); // Passando o turno selecionado para a função do Apps Script
+    }
+
+
+    function loadCollaborators() {
+      const leader = document.getElementById('leader').value;
+      const collaboratorsList = document.getElementById('collaboratorsList');
+      const loadingMessage = document.getElementById('collaboratorsLoading'); // Assuming an element with this ID exists
+
+      if (!leader) {
+        // Se nenhum líder for selecionado, esconder a lista de colaboradores
+        collaboratorsList.innerHTML = '';
+        collaboratorsList.style.display = 'none';
+        loadingMessage.style.display = 'none'; // Esconder a mensagem de carregamento
+        return;
+      }
+
+      // Mostrar a lista de colaboradores e mensagem de carregamento
+      collaboratorsList.style.display = 'block';
+      loadingMessage.style.display = 'block';
+      collaboratorsList.innerHTML = ''; // Clear the list (optional)
+
+      // Chama o Apps Script para obter os colaboradores com base no líder
+      google.script.run.withSuccessHandler(function(collaborators) {
+        // Esconder a mensagem de carregamento
+        loadingMessage.style.display = 'none';
+
+        if (collaborators.length === 0) {
+          // Se não houver colaboradores, exibe mensagem
+          collaboratorsList.innerHTML = '<p>Nenhum colaborador encontrado para este líder.</p>';
+          return; // Retorna se não houver colaboradores
+        }
+
+        const fragment = document.createDocumentFragment(); // Melhor desempenho com grandes dados
+
+        collaborators.forEach(collaborator => {
+          const row = document.createElement('div');
+          row.className = 'collaborator-row';
+          row.innerHTML = `
+            <span>${collaborator.matricula}</span> 
+            <span class="matricula">${collaborator.name}</span> 
+            <select class="presence-status" onchange="toggleAbsenceReason(this)"> 
+              <option value="">Escolher</option>
+              <option value="Presente">Presente</option>
+              <option value="Ausente">Ausente</option>
+            </select>
+            <select class="absence-reason" style="display:none;"> 
+              <option value="">Escolha</option>
+              <option value="Justificado Abono">Abono</option>
+              <option value="Justificado Banco de Horas">Banco de Horas</option>
+              <option value="Justificado Atestado">Atestado</option>
+              <option value="Justificado DSR">DSR</option>
+              <option value="Injustificado Falta">Falta</option>
+            </select>
+          `;
+          fragment.appendChild(row);
+        });
+
+        collaboratorsList.appendChild(fragment);
+      })
+      .withFailureHandler((error) => {
+        console.error('Erro ao carregar colaboradores:', error);
+        loadingMessage.textContent = 'Não foi possível carregar os colaboradores. Tente novamente mais tarde.';
+      })
+      .getCollaborators(leader);
+    }
+
+    // Função para alternar a exibição da justificativa e mudar a cor do select
+    function toggleAbsenceReason(select) {
+      const reasonSelect = select.nextElementSibling;
+      
+      // Modificar a cor do select dependendo do status de presença
+      if (select.value === "Presente") {
+        select.classList.remove("select-absent");
+        select.classList.add("select-present");
+      } else if (select.value === "Ausente") {
+        select.classList.remove("select-present");
+        select.classList.add("select-absent");
+        reasonSelect.style.display = 'block';
+      } else {
+        select.classList.remove("select-present", "select-absent");
+      }
+
+      // Exibir ou esconder a justificativa dependendo do status
+      if (select.value === "Ausente") {
+        reasonSelect.style.display = 'block';
+      } else {
+        reasonSelect.style.display = 'none';
+      }
+    }
+
+    // Função para enviar o formulário de presença
+    function submitForm() {
+      const submitButton = document.querySelector("#presencaSection button"); // Seleciona o botão de envio
+      const turno = document.getElementById('turno').value;
+      const leader = document.getElementById('leader').value;
+      const collaborators = Array.from(document.querySelectorAll('.collaborator-row')).map(row => ({
+        name: row.querySelector('span').textContent,
+        matricula: row.querySelector('.matricula').textContent, 
+        status: row.querySelector('.presence-status').value,
+        reason: row.querySelector('.absence-reason').value
+      }));
+
+      if (!turno || !leader || collaborators.some(collab => !collab.status)) {
+        alert("Preencha todos os campos obrigatórios!");
+        return;
+      }
+
+      const date = new Date();
+      const formattedDateTime = date.toLocaleString('pt-BR');
+
+      submitButton.disabled = true; // Desabilitar o botão após o clique
+
+      document.getElementById('submitProgress').style.display = 'block'; // Exibir barra de progresso
+
+      // Simulando o progresso (atualização da barra)
+      let progress = 0;
+      let interval = setInterval(function() {
+        progress += 10;
+        document.getElementById('submitProgress').value = progress;
+
+        if (progress >= 100) {
+          clearInterval(interval);
+        }
+      }, 300); // Atualiza a barra a cada 300ms
+
+      google.script.run.withSuccessHandler(function(response) {
+        submitButton.disabled = false; // Reabilitar o botão após o envio
+        document.getElementById('submitProgress').style.display = 'none'; // Ocultar a barra
+        if (response.success) {
+          alert(response.message);
+          resetForm();
+        } else {
+          alert(response.message);
+        }
+      }).withFailureHandler(function(error) {
+        submitButton.disabled = false; // Reabilitar o botão em caso de erro
+        alert("Erro ao enviar respostas: " + error.message);
+      }).submitResponses(leader, 
+                          collaborators.map(c => c.name), 
+                          collaborators.map(c => c.matricula), 
+                          collaborators.map(c => c.status), 
+                          collaborators.map(c => c.reason), 
+                          formattedDateTime, turno);
+    }
+
+
+    function resetForm() {
+      document.getElementById('turno').value = '';
+      document.getElementById('leader').value = '';
+      document.getElementById('leader').disabled = true;  // Desabilitar o campo de líder após reset
+      document.querySelectorAll('.presence-status').forEach(select => select.value = '');
+      document.querySelectorAll('.absence-reason').forEach(select => select.style.display = 'none');
+      document.getElementById('collaboratorsList').innerHTML = ''; // Resetar os colaboradores
+    }
+  </script>
+</body>
+</html>
