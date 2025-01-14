@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_top">
+    <title>Justificativa</title>
+    <style>
+
+      * {
+        box-sizing: border-box;
+      }
+
+      /* Estilo global */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #021D49;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #333;
+        overflow-y: auto;
+      }
+
+      /* Estilo do container do formulário */
+      .form-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 800px;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      h2 {
+        text-align: center;
+        color: white;
+        background-color: #021D49;
+        font-size: 24px;
+        padding: 10px 0;
+        border-radius: 5px 5px 0 0;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 16px; /* Tamanho da fonte padrão para os parágrafos */
+        line-height: 1.5; /* Espaçamento entre as linhas */
+        margin-bottom: 10px; /* Espaço abaixo dos parágrafos */
+        color: #333; /* Cor do texto */
+      }
+
+      select, input, textarea {
+        margin: 12px 0;
+        padding: 8px;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+      }
+
+      /* Estilo do botão */
+      button {
+        background-color: #E1261C;  /* Cor de fundo vermelha */
+        color: white;  /* Cor do texto branca */
+        padding: 12px 20px;  /* Espaçamento interno, mais amplo */
+        border: none;  /* Remove borda */
+        border-radius: 8px;  /* Bordas arredondadas */
+        font-weight: bold;  /* Texto em negrito */
+        font-size: 16px;  /* Tamanho de fonte legível */
+        cursor: pointer;  /* Muda o cursor para mãozinha */
+        transition: background-color 0.3s, transform 0.2s;  /* Suaviza as transições de cor e efeito de clique */
+        width: 100%;  /* Largura do botão ajustada para preencher o espaço disponível */
+        box-sizing: border-box;  /* Inclui o padding e a borda no cálculo da largura */
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      select:disabled {
+        background-color: #f1f1f1;
+      }
+
+      /* Estilo dos campos desabilitados */
+      input:disabled, select:disabled {
+        background-color: #e0e0e0;
+        cursor: not-allowed;
+      }
+
+      /* Corpo do conteúdo do formulário */
+      .form-container form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .logo {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        width: 150px;
+        z-index: 10;
+      }
+
+      .logo img {
+        width: 100%;
+        height: auto;
+      }
+
+      /* Estilos para os campos de input, select e button */
+      input, select, button {
+        padding: 15px;
+        margin: 12px 0;
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 8px; /* Bordas mais arredondadas */
+        background-color: #f9f9f9;
+        color: #333;
+        box-sizing: border-box;
+      }
+
+      /* Estilo do botão */
+      button {
+        background-color: #E1261C;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-weight: bold;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      /* Estilo de erro no login */
+      #loginError {
+        color: red;
+        display: none;
+        text-align: center;
+      }
+      
+      /* Loading */
+      #loading {
+        display: none;
+        color: #E1261C;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      progress {
+        -webkit-appearance: none;
+        appearance: none;
+        margin-top: 10px; /* Adiciona um espaço acima do botão */
+      }
+
+      .loading-message {
+        font-size: 14px;
+        font-weight: bold;
+        color: #E1261C;
+        margin-top: 5px;
+        text-align: left;
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <!-- Logo da empresa -->
+    <div class="logo">
+      <img src="https://forumilos.com.br/wp-content/uploads/2024/08/CEVA-LOGISTICS-1024x308.png" alt="Logo CEVA Logistics" />
+    </div>
+
+    <!-- Tela de Login -->
+    <div id="loginSection" class="form-container">
+      <h2>Login</h2>
+      <label for="username">Usuário</label>
+      <input type="text" id="username" placeholder="Digite o usuário" />
+      <label for="password">Senha</label>
+      <input type="password" id="password" placeholder="Digite a senha" />
+      <button onclick="login()">Entrar</button>
+      <div id="loginError" style="color: red; display: none;">Usuário ou senha inválidos</div>
+      
+      <!-- Barra de progresso para login -->
+      <progress id="loginProgress" value="0" max="100" style="width: 100%; height: 5px; display: none;"></progress>
+      
+      <div id="loading" style="display: none;">Verificando Login...</div>
+    </div>
+
+    <!-- Formulário de Justificativa -->
+    <div class="form-container" id="justificativaFormContainer" style="display:none;">
+      <h2>Solicitação de Justificativa e Presença</h2>
+      <form id="justificativaForm" onsubmit="return false;">
+        <!-- Campo Turno -->
+        <label for="turno">Turno:</label>
+        <select id="turno" name="turno" onchange="updateGestores(); checkFields();">
+          <option value="">Selecione um Turno</option>
+          <option value="1º Turno">1º Turno</option>
+          <option value="2º Turno">2º Turno</option>
+          <option value="3º Turno">3º Turno</option>
+          <option value="Administrativo">Administrativo</option>
+        </select><br>
+        
+        <!-- Campo Gestor -->
+        <label for="gestor">Gestor:</label>
+        <select id="gestor" name="gestor" onchange="updateColaboradores(); checkFields();">
+          <option value="">Selecione um Gestor</option>
+        </select>
+        <div id="gestorLoading" class="loading-message" style="display:none;">Carregando os Gestores...</div><br>
+
+        <!-- Campo Colaborador -->
+        <label for="colaborador">Colaborador:</label>
+        <select id="colaborador" name="colaborador" onchange="updateMatricula(); checkFields();">
+          <option value="">Selecione um Colaborador</option>
+        </select>
+        <div id="colaboradorLoading" class="loading-message" style="display:none;">Carregando os Colaboradores...</div><br>
+
+        <!-- Campo Matrícula -->
+        <label for="matricula">Matrícula:</label>
+        <select id="matricula" name="matricula" onchange="checkFields();">
+          <option value="">Selecione a Matrícula</option>
+        </select>
+        <div id="matriculaLoading" class="loading-message" style="display:none;">Carregando a Matricula do Colaborador...</div><br>
+        
+        <!-- Campo Data -->
+        <label for="data">Data:</label>
+        <input type="date" id="data" name="data" disabled><br>
+
+        <!-- Campo Presença -->
+        <label for="presenca">Presença:</label>
+        <select id="presenca" name="presenca" onchange="handlePresencaChange(); checkJustificativa();">
+          <option value="">Selecione Presença</option>
+          <option value="Presente">Presente</option>
+          <option value="Ausente">Ausente</option>
+        </select><br>
+
+        <!-- Campo Justificativa -->
+        <label for="justificativa">Justificativa:</label>
+        <select id="justificativa" name="justificativa" disabled>
+          <option value="">Selecione a Justificativa</option>
+          <option value="Justificado Abono">Justificado Abono</option>
+          <option value="Justificado Banco de Horas">Justificado Banco de Horas</option>
+          <option value="Justificado Atestado">Justificado Atestado</option>
+          <option value="Justificado DSR">Justificado DSR</option>
+          <option value="Injustificado Falta">Injustificado Falta</option>
+        </select><br>
+
+        <!-- Botão de Envio -->
+        <button type="button" onclick="submitForm()">Enviar Solicitação</button>
+      </form>
+    </div>
+
+    <script>
+      function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (!username || !password) {
+          alert("Preencha todos os campos!");
+          return;
+        }
+
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('loginProgress').style.display = 'block';  // Exibir a barra de progresso
+
+        // Simulando o progresso (atualização da barra)
+        let progress = 0;
+        let interval = setInterval(function() {
+          progress += 10;
+          document.getElementById('loginProgress').value = progress;
+
+          if (progress >= 100) {
+            clearInterval(interval);
+          }
+        }, 300); // Atualiza a barra a cada 300ms
+
+        google.script.run
+          .withSuccessHandler(function(response) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('loginProgress').style.display = 'none'; // Ocultar a barra
+            if (response === 'success') {
+              document.getElementById('loginSection').style.display = 'none';
+              document.getElementById('justificativaFormContainer').style.display = 'block';  // Exibir a tela de justificativa
+              loadLeaders();  // Carregar líderes, se necessário
+            } else {
+              document.getElementById('loginError').style.display = 'block';
+            }
+          })
+          .checkLogin(username, password);
+      }
+
+            // Função para preencher os gestores no dropdown
+      function populateGestores(gestores) {
+        const gestorSelect = document.getElementById('gestor');
+        gestores.forEach(gestor => {
+          const option = document.createElement('option');
+          option.value = gestor;
+          option.textContent = gestor;
+          gestorSelect.appendChild(option);
+        });
+      }
+
+      // Função para atualizar os gestores com base no turno selecionado
+      function updateGestores() {
+        const turno = document.getElementById('turno').value;
+        const gestorSelect = document.getElementById('gestor');
+        const colaboradoresSelect = document.getElementById('colaborador');
+        const matriculaSelect = document.getElementById('matricula');
+        const gestorLoading = document.getElementById('gestorLoading');  // Elemento de carregamento
+        
+        colaboradoresSelect.innerHTML = '<option value="">Selecione um Colaborador</option>';
+        matriculaSelect.innerHTML = '<option value="">Selecione a Matrícula</option>';
+        
+        if (turno) {
+          gestorLoading.style.display = 'block';  // Exibe a mensagem "Carregando..."
+          google.script.run.withSuccessHandler(function(gestores) {
+            gestorLoading.style.display = 'none';  // Oculta a mensagem "Carregando..."
+            gestorSelect.innerHTML = '<option value="">Selecione um Gestor</option>';
+            gestores.forEach(function(gestor) {
+              const option = document.createElement('option');
+              option.value = gestor;
+              option.textContent = gestor;
+              gestorSelect.appendChild(option);
+            });
+          }).getGestoresPorTurno(turno);
+        }
+      }
+
+
+      // Função para atualizar os colaboradores com base no gestor selecionado
+      function updateColaboradores() {
+        const turno = document.getElementById('turno').value;
+        const gestor = document.getElementById('gestor').value;
+        const colaboradoresSelect = document.getElementById('colaborador');
+        const matriculaSelect = document.getElementById('matricula');
+        const colaboradorLoading = document.getElementById('colaboradorLoading');  // Elemento de carregamento
+
+        colaboradoresSelect.innerHTML = '<option value="">Selecione um Colaborador</option>';
+        matriculaSelect.innerHTML = '<option value="">Selecione a Matrícula</option>';
+
+        if (gestor && turno) {
+          colaboradorLoading.style.display = 'block';  // Exibe a mensagem "Carregando..."
+          google.script.run.withSuccessHandler(function(colaboradores) {
+            colaboradorLoading.style.display = 'none';  // Oculta a mensagem "Carregando..."
+            colaboradores.forEach(function(colaborador) {
+              const option = document.createElement('option');
+              option.value = colaborador;
+              option.textContent = colaborador;
+              colaboradoresSelect.appendChild(option);
+            });
+          }).getColaboradoresPorGestorETurno(gestor, turno);
+        }
+      }
+
+
+      // Função para atualizar as matrículas com base no colaborador selecionado
+      function updateMatricula() {
+        const turno = document.getElementById('turno').value;
+        const gestor = document.getElementById('gestor').value;
+        const colaborador = document.getElementById('colaborador').value;
+        const matriculaSelect = document.getElementById('matricula');
+        const matriculaLoading = document.getElementById('matriculaLoading');  // Elemento de carregamento
+
+        matriculaSelect.innerHTML = '<option value="">Selecione a Matrícula</option>';
+
+        if (gestor && colaborador && turno) {
+          matriculaLoading.style.display = 'block';  // Exibe a mensagem "Carregando..."
+          google.script.run.withSuccessHandler(function(matriculas) {
+            matriculaLoading.style.display = 'none';  // Oculta a mensagem "Carregando..."
+            matriculas.forEach(function(matricula) {
+              const option = document.createElement('option');
+              option.value = matricula;
+              option.textContent = matricula;
+              matriculaSelect.appendChild(option);
+            });
+          }).getMatriculasPorGestorColaboradorETurno(gestor, colaborador, turno);
+        }
+      }
+
+
+      // Função para habilitar/desabilitar o campo de justificativa
+      function handlePresencaChange() {
+        const presenca = document.getElementById('presenca').value;
+        const justificativaSelect = document.getElementById('justificativa');
+
+        if (presenca === "Presente") {
+          justificativaSelect.value = ''; // Limpar justificativa
+          justificativaSelect.disabled = true; // Desabilitar justificativa
+        } else {
+          justificativaSelect.disabled = false; // Habilitar justificativa
+        }
+      }
+
+      // Função para gerar e mostrar a Chave Primária
+      function updateChavePrimaria() {
+        const gestor = document.getElementById('gestor').value;
+        const colaborador = document.getElementById('colaborador').value;
+        const matricula = document.getElementById('matricula').value;
+        const data = document.getElementById('data').value;
+
+        if (gestor && colaborador && matricula && data) {
+          const formattedDate = new Date(data);
+
+          // Corrige a data caso haja algum erro no fuso horário
+          formattedDate.setDate(formattedDate.getDate() + 1); // Ajusta a data para o dia correto
+
+          // Formata a data para o formato dd/MM/yyyy
+          const dateString = formattedDate.toLocaleDateString('pt-BR'); // Formato da data
+
+          // Gerar a chave primária
+          const chavePrimaria = gestor.trim() + "-" + colaborador.trim() + "-" + matricula.trim() + "-" + dateString;
+
+          // Atualizar o campo "Chave Primária" no formulário
+          document.getElementById('chavePrimaria').value = chavePrimaria;
+        } else {
+          alert("Por favor, preencha todos os campos antes de gerar a chave primária.");
+        }
+      }
+
+      // Função para enviar o formulário (para processamento)
+      function submitForm() {
+        const gestor = document.getElementById('gestor').value;
+        const colaborador = document.getElementById('colaborador').value;
+        const matricula = document.getElementById('matricula').value;
+        const data = document.getElementById('data').value;
+        const justificativa = document.getElementById('justificativa').value;
+        const presenca = document.getElementById('presenca').value;
+
+        // Verificação dos campos obrigatórios
+        if (!gestor || !colaborador || !matricula || !data || !presenca) {
+          alert('Por favor, preencha todos os campos.');
+          return;
+        }
+
+        // Se a presença for "Ausente", o campo justificativa deve ser preenchido
+        if (presenca === "Ausente" && !justificativa) {
+          alert('Por favor, forneça uma justificativa para a ausência.');
+          return;
+        }
+
+        // Desabilitar o botão para evitar clique duplo
+        const submitButton = document.querySelector("button[type='button']");
+        submitButton.disabled = true;
+        
+        // Chama o processamento do formulário e limpa a coluna "J" na planilha "respostas"
+        google.script.run.withSuccessHandler(function(response) {
+          // Reabilitar o botão após o envio da solicitação
+          submitButton.disabled = false;
+
+          if (response.success) {
+            alert(response.message);
+
+            // Limpar os campos do formulário após o envio
+            document.getElementById('turno').value = '';
+            document.getElementById('gestor').value = '';
+            document.getElementById('colaborador').innerHTML = '<option value="">Selecione um Colaborador</option>';
+            document.getElementById('matricula').innerHTML = '<option value="">Selecione a Matrícula</option>';
+            document.getElementById('data').value = '';
+            document.getElementById('presenca').value = '';
+            document.getElementById('justificativa').value = '';
+            document.getElementById('justificativa').disabled = true; // Desabilitar o campo de justificativa
+
+            // Desabilitar os campos de Data e Presença
+            document.getElementById('data').disabled = true;  // Desabilitar campo Data
+            document.getElementById('presenca').disabled = true;  // Desabilitar campo Presença
+
+            // Chama a função para limpar a célula da coluna "J" (presença) da linha selecionada
+            google.script.run.clearPresenceColumn(gestor, colaborador, matricula, data);
+          } else {
+            alert(response.message);
+          }
+        }).processJustificativa(gestor, colaborador, matricula, data, justificativa, presenca);
+      }
+
+
+
+      // Função que habilita a justificativa apenas quando "Ausente" for selecionado
+      function checkJustificativa() {
+        var presenca = document.getElementById("presenca").value;
+
+        if (presenca === "Ausente") {
+          document.getElementById("justificativa").disabled = false;
+        } else {
+          document.getElementById("justificativa").disabled = true;
+        }
+      }
+
+      // Função que habilita ou desabilita campos com base na entrada
+      function checkFields() {
+        var turno = document.getElementById("turno").value;
+        var gestor = document.getElementById("gestor").value;
+        var colaborador = document.getElementById("colaborador").value;
+        var matricula = document.getElementById("matricula").value;
+
+        // Habilitar campos de data, presença e justificativa apenas quando todos os campos acima forem preenchidos
+        if (turno && gestor && colaborador && matricula) {
+          document.getElementById("data").disabled = false;
+          document.getElementById("presenca").disabled = false;
+        } else {
+          document.getElementById("data").disabled = true;
+          document.getElementById("presenca").disabled = true;
+          document.getElementById("justificativa").disabled = true;
+        }
+      }
+
+      // Função chamada ao carregar a página para garantir que os campos comecem desabilitados
+      window.onload = function() {
+        checkFields(); // Verifica se os campos devem ser habilitados ou não
+      };
+    </script>
+  </body>
+</html>
